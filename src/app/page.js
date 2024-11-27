@@ -1,101 +1,124 @@
-import Image from "next/image";
+'use client'
 
-export default function Home() {
+import React from 'react'
+import ThreadCard from '@/components/ThreadCard'
+import TopBar from '@/components/TopBar'
+import Sidebar from '@/components/Sidebar'
+import RightSidebar from '@/components/RightSidebar'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+const Home = () => {
+  // Placeholder data for threads
+  const {data:session, status } = useSession()
+  const router = useRouter()
+
+  React.useEffect(() => {
+    if (status === 'unauthenticated') {
+      router.push('/login')
+    }
+  }, [status, router])
+
+  if (status === 'loading') {
+    return (
+      <div className="min-h-screen bg-black flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
+      </div>
+    )
+  }
+
+  if (!session?.user) {
+    return null
+  }
+  const threads = [
+    {
+      id: 1,
+      user: {
+        name: 'John Doe',
+        username: '@johndoe',
+        avatar: 'https://api.dicebear.com/6.x/avataaars/svg?seed=John'
+      },
+      content: 'Just launched my new project! 🚀 #coding #development',
+      timestamp: '2h ago',
+      likes: 42,
+      replies: 12,
+      retweets: 8
+    },
+    {
+      id: 2,
+      user: {
+        name: 'Sarah Wilson',
+        username: '@sarahw',
+        avatar: 'https://api.dicebear.com/6.x/avataaars/svg?seed=Sarah'
+      },
+      content: 'Learning Next.js has been an amazing journey! Building my first full-stack app 💻 #webdev #javascript',
+      timestamp: '4h ago',
+      likes: 128,
+      replies: 24,
+      retweets: 16
+    },
+    {
+      id: 3,
+      user: {
+        name: 'Alex Chen',
+        username: '@achen',
+        avatar: 'https://api.dicebear.com/6.x/avataaars/svg?seed=Alex'
+      },
+      content: 'Who else is excited about the new AI developments? 🤖 The future is now! #AI #technology',
+      timestamp: '6h ago',
+      likes: 89,
+      replies: 32,
+      retweets: 14
+    },
+    {
+      id: 4,
+      user: {
+        name: 'Emma Davis',
+        username: '@emmad',
+        avatar: 'https://api.dicebear.com/6.x/avataaars/svg?seed=Emma'
+      },
+      content: 'Just deployed my portfolio using Vercel. Check it out! 🌐 #portfolio #webdesign',
+      timestamp: '12h ago',
+      likes: 156,
+      replies: 18,
+      retweets: 22
+    },
+    {
+      id: 5,
+      user: {
+        name: 'Mike Brown',
+        username: '@mikeb',
+        avatar: 'https://api.dicebear.com/6.x/avataaars/svg?seed=Mike'
+      },
+      content: 'TailwindCSS is a game changer for styling. Never going back! 🎨 #css #tailwind #frontend',
+      timestamp: '1d ago',
+      likes: 234,
+      replies: 45,
+      retweets: 28
+    }
+  ]
+
   return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.js
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+    <div className="min-h-screen bg-black">
+      <TopBar />
+      
+      
+      <div className="flex">
+        <Sidebar />
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
+        {/* Main Content */}
+        <main className="flex-1 ml-[70px] xl:ml-[250px] max-w-2xl px-4 pt-4">
+          <h1 className="text-white text-2xl font-bold py-4">Home</h1>
+          
+          <div className="space-y-4">
+            {threads.map((thread) => (
+              <ThreadCard key={thread.id} thread={thread} />
+            ))}
+          </div>
+        </main>
+        <RightSidebar />
+      </div>
     </div>
-  );
+  )
 }
+
+export default Home
